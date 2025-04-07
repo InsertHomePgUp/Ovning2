@@ -1,43 +1,54 @@
 package se.su.ovning2;
 
-import java.util.Collection;
-import java.util.SortedSet;
+import java.util.*;
 
 public class Searcher implements SearchOperations {
+
+  Set<String> uniqueArtists = new HashSet<>();
+  Set<String> uniqueGenres = new HashSet<>();
+  Set<String> uniqueTitles = new HashSet<>();
 
   public Searcher(Collection<Recording> data) {
 
     Collection<Recording> recordings = data;
+
+    for (Recording recording : recordings) {
+      uniqueArtists.add(recording.getArtist());
+    }
+    for (Recording recording : recordings) {
+      uniqueGenres.addAll(recording.getGenre());
+    }
+    for (Recording recording : recordings) {
+      uniqueTitles.add(recording.getTitle());
+    }
   }
 
   @Override
   public long numberOfArtists() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'numberOfArtists'");
+    return uniqueArtists.size();
   }
 
   @Override
   public long numberOfGenres() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'numberOfGenres'");
+    return uniqueGenres.size();
   }
 
   @Override
   public long numberOfTitles() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'numberOfTitles'");
+    return uniqueTitles.size();
   }
 
   @Override
   public boolean doesArtistExist(String name) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'doesArtistExist'");
+    return uniqueArtists.contains(name);
   }
 
   @Override
   public Collection<String> getGenres() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getGenres'");
+    Set<String> unmodableGenres = new TreeSet<>();
+    unmodableGenres.addAll(uniqueGenres);
+    Collections.unmodifiableSet(unmodableGenres);
+    return unmodableGenres;
   }
 
   @Override
