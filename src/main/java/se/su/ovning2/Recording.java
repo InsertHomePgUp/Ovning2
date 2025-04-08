@@ -1,11 +1,8 @@
 package se.su.ovning2;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
-import java.util.Comparator;
+import java.util.*;
 
-public class Recording implements Comparator<Recording> {
+public class Recording implements Comparable<Recording> {
   private final int year;
   private final String artist;
   private final String title;
@@ -48,19 +45,40 @@ public class Recording implements Comparator<Recording> {
 
   //Överskuggar equals metoden, inte endast == som skulle jämföra pekarna, detta för att kunna jämföra innehåll av en recording mot en annan
   @Override
-  public boolean equals (Recording other) {
-      return this.title.equals(other.getTitle()) && this.year == other.getYear() && this.artist.equals(other.getArtist());
-  }
-//Överskuggar hashCode(). eftersom man enl föreläsning måste göra det om man överskuggar equals metoden
-@Override
-public int hashCode() {
-    return Objects.hash(title, year, artist); //Använder samtliga värden i equals enl instruktion
-}
+  public boolean equals (Object other) {
+    if (other == null || this.getClass() != other.getClass())
+      return false;
 
-@Override
+    Recording otherRecording = (Recording) other;
+    return this.title.equals(otherRecording.getTitle()) && this.year == otherRecording.getYear() && this.artist.equals(otherRecording.getArtist());
+  }
+  //Överskuggar hashCode(). eftersom man enl föreläsning måste göra det om man överskuggar equals metoden
+  @Override
+  public int hashCode() {
+    return Objects.hash(title, year, artist); //Använder samtliga värden i equals enl instruktion
+  }
+
+  /**@Override
   public int compare(Recording a, Recording b) {
     return Integer.compare(a.getYear(), b.getYear());
-  }
+  }**/
 
+  @Override
+  public int compareTo(Recording other) {
+    // Jämför först årtalen
+    int yearComparison = Integer.compare(this.year, other.year);
+    if (yearComparison != 0) {
+      return yearComparison; // Om årtalen inte är lika, returnera jämförelsen
+    }
+
+    // Om årtalen är lika, jämför på artist
+    int artistComparison = this.artist.compareTo(other.artist);
+    if (artistComparison != 0) {
+      return artistComparison; // Om artisterna inte är lika, returnera jämförelsen
+    }
+
+    // Om både år och artist är lika, jämför på titel
+    return this.title.compareTo(other.title); // Lägg till jämförelse på titel
+  }
 
 }
